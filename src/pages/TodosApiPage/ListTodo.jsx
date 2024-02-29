@@ -8,21 +8,28 @@ class ListTodo extends Component {
   // state = {
   //   todos: [],
   // };
-  componentDidMount() {
-    // function này sẽ tự động được chạy khi user load page ( chạy sau render() )
-    console.log("did mount");
+
+  fetchAllTodos = () => {
     axios
       .get(URL_TODOS)
       .then((result) => {
+        // đẩy list todo lên redux
         this.props.handleGetAllTodos(result.data);
         // this.setState({ todos: result.data });
       })
       .catch((err) => {});
+  };
+  componentDidMount() {
+    // function này sẽ tự động được chạy khi user load page ( chạy sau render() )
+    console.log("did mount");
+    this.fetchAllTodos();
   }
   handleDelete = (id) => {
     axios
       .delete(`${URL_TODOS}/${id}`)
       .then((res) => {
+        // gọi lại api lấy danh sách todos sau khi xoá thành công
+        this.fetchAllTodos();
         toast("Success");
         console.log(res);
       })
